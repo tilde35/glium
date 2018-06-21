@@ -161,7 +161,7 @@ fn main() {
         // Handle events
         events_loop.poll_events(|event| match event {
             glutin::Event::WindowEvent { event, .. } => match event {
-                glutin::WindowEvent::Closed => exit = true,
+                glutin::WindowEvent::CloseRequested => exit = true,
                 glutin::WindowEvent::KeyboardInput { input, .. } => if input.state == glutin::ElementState::Pressed {
                     if let Some(key) = input.virtual_keycode {
                         match key {
