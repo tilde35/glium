@@ -19,6 +19,7 @@ use backend;
 use backend::Context;
 use backend::Backend;
 use glutin::GlContext;
+use glutin::dpi::PhysicalSize;
 use std;
 use std::cell::{Cell, RefCell, Ref};
 use std::error::Error;
@@ -173,7 +174,7 @@ impl Display {
         // If the size of the framebuffer has changed, resize the context.
         if self.last_framebuffer_dimensions.get() != (w, h) {
             self.last_framebuffer_dimensions.set((w, h));
-            self.gl_window.borrow().resize(w, h);
+            self.gl_window.borrow().resize(PhysicalSize::new(w as f64, h as f64));
         }
 
         Frame::new(self.context.clone(), (w, h))
@@ -262,9 +263,10 @@ unsafe impl Backend for GlutinBackend {
         let gl_window = self.borrow();
         // get_inner_size() returns size in pixels (changed in winit 0.9 - this
         // used to return a hidpi scaled size)
-        let (width, height) = gl_window.get_inner_size().unwrap_or((800, 600));
+        let factor = gl_window.get_hidpi_factor();
+        let size = gl_window.get_inner_size().map(|logical_size| logical_size.to_physical(factor)).unwrap_or(PhysicalSize::new(800.0, 600.0));
 
-        (width, height)
+        size.into()
     }
 
     #[inline]

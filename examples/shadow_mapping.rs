@@ -13,7 +13,7 @@ fn main() {
     // Create the main window
     let mut events_loop = glutin::EventsLoop::new();
     let window = glutin::WindowBuilder::new()
-        .with_dimensions(win_size.0, win_size.1)
+        .with_dimensions((win_size.0, win_size.1).into())
         .with_title("Shadow Mapping");
     let context = glutin::ContextBuilder::new().with_vsync(true);
     let display = glium::Display::new(window, context, &events_loop).unwrap();
